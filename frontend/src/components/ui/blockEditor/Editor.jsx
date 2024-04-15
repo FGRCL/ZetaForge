@@ -25,6 +25,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  TextInput,
 } from "@carbon/react";
 import { useAtom, useSetAtom } from "jotai";
 import { useImmerAtom } from 'jotai-immer';
@@ -38,14 +39,13 @@ export default function Editor() {
   const minizedStyles = "inset-y-16 right-8 w-1/3"
   const maximizedStyles = "inset-y-11 right-0 w-full z-[9001]"
   const [blockPath] = useAtom(blockEditorRootAtom);
-  const [blockFolderName, setBlockFolderName] = useState(null); //TODO check if still needed
+  const [blockFolderName, setBlockFolderName] = useState(null);
   const setBlockEditorOpen = useSetAtom(isBlockEditorOpenAtom);
   const [openAIApiKey] = useAtom(openAIApiKeyAtom);
   const [pipeline, setPipeline] = useImmerAtom(pipelineAtom);
   const [editor] = useAtom(drawflowEditorAtom);
   const [compilationErrorToast, setCompilationErrorToast] = useAtom(compilationErrorToastAtom)
 
-  // const [agentName, setAgentName] = useState('gpt-4_python_compute');
   const [agentName, setAgent] = useState("gpt-4_python_compute");
 
   const [queryAndResponses, setQueryAndResponses] = useState([]);
@@ -59,6 +59,7 @@ export default function Editor() {
   const [isRunButtonPressed, setIsRunButtonPressed] = useState(false);
   const [activeCodeMirror, setActiveCodeMirror] = useState(null);
   const [isMaximized, setMaximized] = useState(false)
+  // const [blockName setBlockName] = useState('')
   const chatTextarea = useRef(null);
   const panel = useRef(null);
 
@@ -322,7 +323,7 @@ export default function Editor() {
   return (
     <div ref={panel} className={"editor-block absolute max-h-full overflow-y-scroll " + (isMaximized ? maximizedStyles : minizedStyles)}>
       <div className="block-editor-header">
-        <span className="p-4 text-lg italic">{blockFolderName}</span>
+        <TextInput className="p-4 italic" value={blockName} />
         <div className="flex flex-row items-center justify-end">
           <div className="p-4">
             <Bot size={24} className="mx-2 align-middle" />
