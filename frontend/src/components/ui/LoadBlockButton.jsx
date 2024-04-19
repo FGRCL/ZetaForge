@@ -1,12 +1,12 @@
-import { HeaderMenuItem } from "@carbon/react";
-import { useRef } from "react";
-import { pipelineAtom, getPipelineFormat } from "@/atoms/pipelineAtom";
-import { customAlphabet } from "nanoid";
-import { useImmerAtom } from 'jotai-immer'
-import { useAtom } from "jotai";
-import { trpc } from "@/utils/trpc"
 import { getDirectoryPath } from "@/../utils/fileUtils";
 import { mixpanelAtom } from "@/atoms/mixpanelAtom";
+import { getPipelineFormat, pipelineAtom } from "@/atoms/pipelineAtom";
+import { trpc } from "@/utils/trpc";
+import { HeaderMenuItem } from "@carbon/react";
+import { useAtom } from "jotai";
+import { useImmerAtom } from 'jotai-immer';
+import { customAlphabet } from "nanoid";
+import { useRef } from "react";
 
 export default function LoadBlockButton() {
   const FILE_EXTENSION_REGEX = /\.[^/.]+$/;
@@ -52,8 +52,8 @@ export default function LoadBlockButton() {
   const loadBlock = async (pipeline) => {
     try {
       mixpanelService.trackEvent('Load Block')
-    } catch(err){
-        
+    } catch (err) {
+
     }
     const files = fileInput.current.files
     for (const key in files) {
@@ -65,7 +65,7 @@ export default function LoadBlockButton() {
         const spec = JSON.parse(await (new Blob([file])).text())
         let folderPath = getDirectoryPath(file.path)
         folderPath = folderPath.replaceAll('\\', '/')
-        
+
         await addBlockToPipeline(spec, folderPath)
 
         fileInput.current.value = ''

@@ -7,7 +7,7 @@ import path from "path";
 import sha256 from 'sha256';
 import { z } from 'zod';
 import { compileComputation, saveBlockSpecs } from './blockSerialization.js';
-import { readSpecs, readPipelines, s3Upload } from "./fileSystem.js";
+import { readPipelines, readSpecs, s3Upload } from "./fileSystem.js";
 import { copyPipeline, getBlockPath, removeBlock, saveBlock, saveSpec } from './pipelineSerialization.js';
 import { publicProcedure, router } from './trpc';
 

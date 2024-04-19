@@ -1,3 +1,4 @@
+import { toBigIntBE } from 'bigint-buffer';
 import bodyParser from "body-parser";
 import { exec, spawn } from "child_process";
 import compression from "compression";
@@ -6,15 +7,13 @@ import 'dotenv/config';
 import express from "express";
 import fs, { access, constants, readFile, readFileSync, writeFile } from "fs";
 import fsp from "fs/promises";
+import getMAC from "getmac";
 import multer from "multer";
 import { Configuration, OpenAIApi } from "openai";
 import path from "path";
+import sha256 from 'sha256';
 import { fileExists, readJsonToObject, readSpecs } from "./fileSystem.js";
-import { copyPipeline, saveBlock } from "./pipelineSerialization.js";
-import {app} from 'electron'
-import sha256 from 'sha256'
-import {toBigIntBE} from 'bigint-buffer';
-import getMAC from "getmac"
+import { copyPipeline } from "./pipelineSerialization.js";
 
 
 function startExpressServer() {
@@ -261,18 +260,6 @@ function startExpressServer() {
     try {
       // Copy from our buffer dir to the save dir
       const savePaths = await copyPipeline(specs, name, buffer, writePath);
-      return res.status(200).json(savePaths)
-    } catch (error) {
-      return res.status(500).json({error: `Internal Server Error: ${error}`})
-    }
-  });
-
-  // POST `/block` saves block
-  app.post('/block', async (req, res) => {
-    console.log(req.body)
-    try {
-      const {blockSpec, blockPath, pipelinePath} = req.body;
-      const savePaths = await saveBlock(blockSpec, blockPath, pipelinePath);
       return res.status(200).json(savePaths)
     } catch (error) {
       return res.status(500).json({error: `Internal Server Error: ${error}`})
