@@ -207,7 +207,6 @@ export default function DrawflowWrapper() {
     block.information.id = id
     block.action.container.image = id
     setPipeline((draft) => {
-      ``
       draft.data[id] = block;
     })
 
