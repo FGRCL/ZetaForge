@@ -21,12 +21,16 @@ export async function checkAndUpload(key, filePath) {
 }
 async function upload(key, filePath) {
   const fileBody = await fs.readFile(filePath)
+  const fileName = path.basename(filePath);
   
   try {
     const res = await client.send(new PutObjectCommand({
       Bucket: config.s3.bucket,
       Key: key,
       Body: fileBody,
+      Metadata: {
+        name: fileName
+      }
     }))
     return res
   } catch (err) {
