@@ -1,5 +1,6 @@
 import { HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import fs from 'fs/promises';
+import path from "path";
 import config from "../config";
 
 const client = new S3Client({

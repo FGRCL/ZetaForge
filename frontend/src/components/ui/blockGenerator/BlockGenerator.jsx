@@ -54,7 +54,7 @@ const BlockGenerator = ({ block, openView, id, historySink, pipelineAtom}) => {
 
   let content = (<BlockContent html={block.views.node.html} block={block} onInputChange={handleInputChange} />)
   if (block.action.parameters?.path?.type == "file") {
-    content = (<FileBlock blockId={id} block={block} setFocusAction={setFocusAction} />)
+    content = (<FileBlock blockId={id} setFocusAction={setFocusAction} />)
   }
 
   const backgroundColor = block.views?.node?.title_bar?.background_color || 'var(--title-background-color)';

@@ -1,4 +1,5 @@
 import { drawflowEditorAtom } from "@/atoms/drawflowAtom";
+import { mixpanelAtom } from "@/atoms/mixpanelAtom";
 import { pipelineAtom } from "@/atoms/pipelineAtom";
 import { pipelineSchemaAtom } from "@/atoms/pipelineSchemaAtom";
 import { trpc } from "@/utils/trpc";
@@ -10,7 +11,6 @@ import { useImmerAtom } from "jotai-immer";
 import { useRef, useState } from "react";
 import { uuidv7 } from "uuidv7";
 import ClosableModal from "./modal/ClosableModal";
-import { mixpanelAtom } from "@/atoms/mixpanelAtom";
 
 export default function RunPipelineButton({modalPopper, children, action}) {
   const [editor] = useAtom(drawflowEditorAtom);
@@ -34,7 +34,25 @@ export default function RunPipelineButton({modalPopper, children, action}) {
   const runPipeline = async (editor, pipeline) => {
     // check if pipeline structure exists
     if (!pipeline.data || !Object.keys(pipeline.data).length) return null;
-    const results = pipelineSchema.safeParse(pipeline.data);
+    setValidationErrorMsg([])
+
+    let pipelineSpecs = editor.convert_drawflow_to_block(pipeline.name, pipeline.data);
+    const executionId = uuidv7();
+    try {
+      pipelineSpecs = await uploadParameterBlocks.mutateAsync({
+        pipelineId: pipeline.id,
+        executionId: executionId,
+        pipelineSpecs: pipelineSpecs,
+        buffer: pipeline.buffer,
+      });
+    } catch (error) {
+      setValidationErrorMsg([`Failed to upload files to anvil server: ${error}`])
+      setIsOpen(true)
+      return null;
+    }
+
+    console.log(pipelineSchema, pipelineSpecs)
+    const results = pipelineSchema.safeParse(pipelineSpecs.pipeline);
 
     if (!results.success) {
       setValidationErrorMsg(prev => {
@@ -45,16 +63,6 @@ export default function RunPipelineButton({modalPopper, children, action}) {
     } else {
       setValidationErrorMsg([]);
     }
-
-    let pipelineSpecs = editor.convert_drawflow_to_block(pipeline.name, pipeline.data);
-    const executionId = uuidv7();
-
-    pipelineSpecs = await uploadParameterBlocks.mutateAsync({
-      pipelineId: pipeline.id,
-      executionId: executionId,
-      pipelineSpecs: pipelineSpecs,
-      buffer: pipeline.buffer,
-    });
 
     try {
       // tries to put history in a user path if it exists, if not
