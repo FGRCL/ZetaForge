@@ -4,7 +4,7 @@ import fs from "fs/promises";
 import path from "path";
 import { z } from 'zod';
 import { compileComputation, runTest, saveBlockSpecs } from './blockSerialization.js';
-import { getHistory, getIndex, updateHistory, updateIndex } from "./chat.js";
+import { getHistory, getIndex, updateHistory, updateIndex } from "./chat";
 import { readPipelines, readSpecs } from "./fileSystem.js";
 import { copyPipeline, getBlockPath, removeBlock, saveBlock, saveSpec, uploadBlocks } from './pipelineSerialization.js';
 import { publicProcedure, router } from './trpc';
