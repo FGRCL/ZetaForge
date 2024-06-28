@@ -3,14 +3,10 @@ import { compileComputation } from "../../server/blockSerialization";
 import fs from "fs/promises";
 import { fileExists } from "../../server/fileSystem";
 import { app } from "electron";
-import { spawnSync } from "child_process";
+import child_process from "child_process";
 import { getCompuationsSourceCode } from "../fixture/blockFixture";
 
-vi.mock("fs/promises", () => ({
-  default: {
-    readFile: vi.fn(),
-  },
-}));
+vi.mock("fs/promises");
 
 vi.mock("electron", () => ({
   app: {
@@ -18,13 +14,9 @@ vi.mock("electron", () => ({
   },
 }));
 
-vi.mock("../../server/fileSystem", () => ({
-  fileExists: vi.fn(),
-}));
+vi.mock("../../server/fileSystem");
 
-vi.mock("child_process", () => ({
-  spawnSync: vi.fn(),
-}));
+vi.mock("child_process")
 
 describe("blockSerialization", () => {
   const blockComputationsSourceCode = getCompuationsSourceCode();
@@ -51,7 +43,7 @@ describe("blockSerialization", () => {
       fs.readFile.mockResolvedValueOnce(blockComputationsSourceCode);
       app.isPackaged = false;
       fileExists.mockResolvedValueOnce(true);
-      spawnSync.mockReturnValueOnce({ stdout: JSON.stringify(expectedSpecs) });
+      child_process.spawnSync.mockReturnValueOnce({ stdout: JSON.stringify(expectedSpecs) });
 
       const result = await compileComputation("new-python-123");
 
@@ -68,7 +60,7 @@ describe("blockSerialization", () => {
       fs.readFile.mockResolvedValueOnce(blockComputationsSourceCode);
       app.isPackaged = false;
       fileExists.mockResolvedValueOnce(true);
-      spawnSync.mockReturnValueOnce({ stdout: scriptStdout });
+      child_process.spawnSync.mockReturnValueOnce({ stdout: scriptStdout });
 
       expect(() => compileComputation("new-python-123")).rejects.toThrowError();
     });
@@ -78,7 +70,7 @@ describe("blockSerialization", () => {
 
       app.isPackaged = false;
       fileExists.mockResolvedValueOnce(false);
-      spawnSync.mockReturnValueOnce({ stdout: scriptStdout });
+      child_process.spawnSync.mockReturnValueOnce({ stdout: scriptStdout });
 
       expect(() => compileComputation("new-python-123")).rejects.toThrowError(
         "Could not find script for compilation",
