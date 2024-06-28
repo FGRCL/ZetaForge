@@ -1,4 +1,4 @@
-import { execFile, spawnSync } from "child_process";
+import child_process from "child_process";
 import { app } from "electron";
 import fs from "fs/promises";
 import path from "path";
@@ -14,7 +14,7 @@ export async function compileComputation(blockPath) {
     throw new Error(`Could not find script for compilation: ${scriptPath}`);
   }
 
-  const {stdout} = spawnSync("python", [scriptPath], {
+  const {stdout} = child_process.spawnSync("python", [scriptPath], {
     input: source,
     encoding: 'utf8'
   });
@@ -49,7 +49,7 @@ export async function runTest(blockPath, blockKey) {
   }
   
   return new Promise((resolve, reject) => {
-    execFile("python", [scriptPath, blockPath, blockKey], (error, stdout, stderr) => {
+    child_process.execFile("python", [scriptPath, blockPath, blockKey], (error, stdout, stderr) => {
       if (error) {
         reject(error);
       }
