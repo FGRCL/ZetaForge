@@ -1,5 +1,10 @@
-import { logger } from "./logger";
 import { HttpStatus, ServerError } from "./serverError";
+
+
+// Terminate execution
+// log socket
+// filter pipeline
+// ping
 
 export async function getBuildContextStatus(configuration, pipelineSpecs) {
   const response = await handleRequest(
