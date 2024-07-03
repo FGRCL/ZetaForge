@@ -1,8 +1,8 @@
 import { logger } from "./logger";
 import { HttpStatus, ServerError } from "./serverError";
-import { HttpMethod } from "@/utils/HttpMethod";
-import { buildUrl } from "@/utils/urlBuilder";
-import { LOCAL_DOMAINS } from "@/utils/constants";
+import { HttpMethod } from "../utils/HttpMethod";
+import { buildUrl } from "../utils/urlBuilder";
+import { LOCAL_DOMAINS } from "../utils/constants";
 
 export async function getBuildContextStatus(configuration, pipelineSpecs) {
   const response = await handleRequest(
