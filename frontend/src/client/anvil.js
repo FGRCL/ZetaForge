@@ -1,7 +1,6 @@
 import { HttpMethod } from "@/utils/HttpMethod";
 import { buildUrl } from "@/utils/urlBuilder";
 import { LOCAL_DOMAINS } from "@/utils/constants";
-// log socket
 
 export async function terminateExecution(configuration, executionId) {
   const response = await handleRequest(
