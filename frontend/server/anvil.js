@@ -69,7 +69,7 @@ function buildPath(scheme, host, port, path) {
 }
 
 function getScheme(host) {
-  LOCAL_DOMAINS.includes(host) ? "http" : "https";
+  return LOCAL_DOMAINS.includes(host) ? "http" : "https";
 }
 
 async function handleRequest(url, method, headers, body = null) {
