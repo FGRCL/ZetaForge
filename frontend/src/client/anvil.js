@@ -1,8 +1,11 @@
+import { HttpMethod } from "@/utils/HttpMethod";
+import { buildUrl } from "@/utils/urlBuilder";
+import { LOCAL_DOMAINS } from "@/utils/constants";
 // log socket
 
 export async function terminateExecution(configuration, executionId) {
   const response = await handleRequest(
-    buildPath(
+    buildUrl(
       getScheme(configuration.anvil.host),
       configuration.anvil.host,
       configuration.anvil.port,
@@ -19,7 +22,7 @@ export async function terminateExecution(configuration, executionId) {
 
 export async function getAllPipelines(configuration) {
   const response = await handleRequest(
-    buildPath(
+    buildUrl(
       getScheme(configuration.anvil.host),
       configuration.anvil.host,
       configuration.anvil.port,
@@ -36,7 +39,7 @@ export async function getAllPipelines(configuration) {
 
 export async function ping(configuration) {
   const response = await handleRequest(
-    buildPath(
+    buildUrl(
       getScheme(configuration.anvil.host),
       configuration.anvil.host,
       configuration.anvil.port,
@@ -51,20 +54,6 @@ export async function ping(configuration) {
   } catch {
     return false
   }
-}
-
-const LOCAL_DOMAINS = ["localhost", "127.0.0.1", "::1"];
-
-const HttpMethod = {
-  GET: "GET",
-  POST: "POST",
-};
-
-function buildPath(scheme, host, port, path) {
-  const base = `${scheme}://${host}:${port}`;
-  console.log(scheme)
-  const url = new URL(path, base);
-  return url;
 }
 
 function getScheme(host) {

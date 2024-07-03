@@ -1,9 +1,12 @@
 import { logger } from "./logger";
 import { HttpStatus, ServerError } from "./serverError";
+import { HttpMethod } from "@/utils/HttpMethod";
+import { buildUrl } from "@/utils/urlBuilder";
+import { LOCAL_DOMAINS } from "@/utils/constants";
 
 export async function getBuildContextStatus(configuration, pipelineSpecs) {
   const response = await handleRequest(
-    buildPath(
+    buildUrl(
       getScheme(configuration.anvil.host),
       configuration.anvil.host,
       configuration.anvil.port,
@@ -27,7 +30,7 @@ export async function createExecution(
 ) {
   const sortedPipelines = buildSortKeys(pipelineSpecs);
   const response = await handleRequest(
-    buildPath(
+    buildUrl(
       getScheme(configuration.anvil.host),
       configuration.anvil.host,
       configuration.anvil.port,
@@ -55,19 +58,6 @@ export async function createExecution(
   return body;
 }
 
-const LOCAL_DOMAINS = ["localhost", "127.0.0.1", "::1"];
-
-const HttpMethod = {
-  GET: "GET",
-  POST: "POST",
-};
-
-function buildPath(scheme, host, port, path) {
-  const base = `${scheme}://${host}:${port}`;
-  const url = new URL(path, base);
-  return url;
-}
-
 function getScheme(host) {
   return LOCAL_DOMAINS.includes(host) ? "http" : "https";
 }
@@ -81,9 +71,9 @@ async function handleRequest(url, method, headers, body = null) {
     });
     return response;
   } catch (error) {
-    const message = `Anvil request failed: ${error}`;
-    logger.error(message);
-    throw new Error(message);
+    const message = "Anvil request failed";
+    logger.error(error, message);
+    throw new ServerError(message, HttpStatus.INTERNAL_SERVER_ERROR, error);
   }
 }
 
