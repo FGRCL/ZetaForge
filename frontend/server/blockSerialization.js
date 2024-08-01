@@ -6,6 +6,7 @@ import { BLOCK_SPECS_FILE_NAME } from "../src/utils/constants";
 import { fileExists } from "./fileSystem";
 import { logger } from "./logger";
 import { HttpStatus, ServerError } from "./serverError";
+import directoryTree from "directory-tree";
 
 export async function compileComputation(blockPath) {
   const sourcePath = path.join(blockPath, "computations.py");
@@ -72,4 +73,16 @@ export async function runTest(blockPath, blockKey) {
       },
     );
   });
+}
+
+export async function getDirectoryTree(pipelineId, blockId) {
+  const blockDirectory = path.join(
+    process.cwd(),
+    ".cache",
+    pipelineId,
+    blockId,
+  );
+
+  const result = directoryTree(blockDirectory);
+  return result;
 }
