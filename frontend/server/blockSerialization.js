@@ -3,10 +3,9 @@ import { app } from "electron";
 import fs from "fs/promises";
 import path from "path";
 import { BLOCK_SPECS_FILE_NAME } from "../src/utils/constants";
-import { fileExists } from "./fileSystem";
+import { fileExists, getDirectoryTree } from "./fileSystem";
 import { logger } from "./logger";
 import { HttpStatus, ServerError } from "./serverError";
-import directoryTree from "directory-tree";
 
 export async function compileComputation(blockPath) {
   const sourcePath = path.join(blockPath, "computations.py");
@@ -75,7 +74,7 @@ export async function runTest(blockPath, blockKey) {
   });
 }
 
-export async function getDirectoryTree(pipelineId, blockId) {
+export async function getBlockDirectory(pipelineId, blockId) {
   const blockDirectory = path.join(
     process.cwd(),
     ".cache",
@@ -83,6 +82,6 @@ export async function getDirectoryTree(pipelineId, blockId) {
     blockId,
   );
 
-  const result = directoryTree(blockDirectory);
-  return result;
+  const tree = getDirectoryTree(blockDirectory);
+  return tree;
 }
