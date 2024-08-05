@@ -1,5 +1,6 @@
 import { execFile, spawnSync } from "child_process";
 import { app } from "electron";
+import { cacheJoin } from "./cache"
 import fs from "fs/promises";
 import path from "path";
 import {
@@ -12,9 +13,7 @@ import { logger } from "./logger";
 import { HttpStatus, ServerError } from "./serverError";
 
 export async function compileComputation(pipelineId, blockId) {
-  const sourcePath = path.join(
-    process.cwd(),
-    ".cache",
+  const sourcePath = cacheJoin(
     pipelineId,
     blockId,
     "computations.py",
@@ -85,9 +84,7 @@ export async function runTest(blockPath, blockKey) {
 }
 
 export async function getBlockDirectory(pipelineId, blockId) {
-  const blockDirectory = path.join(
-    process.cwd(),
-    ".cache",
+  const blockDirectory = cacheJoin(
     pipelineId,
     blockId,
   );
@@ -97,9 +94,7 @@ export async function getBlockDirectory(pipelineId, blockId) {
 }
 
 export async function getBlockFile(pipelineId, blockId, relativeFilePath) {
-  const absoluteFilePath = path.join(
-    process.cwd(),
-    ".cache",
+  const absoluteFilePath = cacheJoin(
     pipelineId,
     blockId,
     relativeFilePath,
@@ -118,9 +113,7 @@ export async function updateBlockFile(
   relativeFilePath,
   content,
 ) {
-  const absoluteFilePath = path.join(
-    process.cwd(),
-    ".cache",
+  const absoluteFilePath = cacheJoin(
     pipelineId,
     blockId,
     relativeFilePath,
@@ -162,7 +155,9 @@ export async function callAgent(
       userMessage,
       conversationHistory,
     }),
+    encoding: "utf8",
   });
-  logger.debug(stdout);
-  return stdout;
+  const response = JSON.parse(stdout).response;
+
+  return response;
 }
